@@ -1,12 +1,29 @@
 SELECT * FROM test.sleep_health;
-select count(*) from sleep_health; # There are 374 rows in the table
-select count(*) from information_schema.columns where table_name='sleep_health'; #There are 13 columns.
-#all data types are correct.
+
+.................................................................
+-- There are 374 rows in the table
+  
+select count(*) from sleep_health; 
+.................................................................
+  -- There are 13 columns.  
+
+select count(*) from information_schema.columns where table_name='sleep_health'; 
+..................................................................
+-- all data types are correct.
+  
 describe sleep_health;
+..................................................................
+-- change column names into proper understandable names with underscore connecetion, because l am working in mysql workbench
+  
 alter table sleep_health change column Physical Activity Level Daily phisical level(minutes) int;
-#change column names into proper understandable names with underscore connecetion, because l am working in mysql workbench
+..................................................................
+-- checking if there are null values
 select Sleep_Duration from sleep_health;
-#checking if there are null values
+..................................................................
+-- l found 242 duplicate rows, with all the same values except the Person_ID column. But this is a sinthetic dataset
+-- dowloaded from Kaggle's datasets, it is for ilustrative purposes. So l will not delete duplicate rows because this dataset
+-- is not a reflection of real data but it serves for technical purposes
+
 select count(*)from sleep_health where Gender is null or Person_ID is null or Age is null or Occupation is null or Sleep_Duration is null
 or Quality_of_Sleep is null or Daily_phisical_activity is null or Stress_Level is null or BMI_Category is null or Blood_Pressure is null
 or Heart_Rate is null or Daily_Steps is null or Sleep_Disorder is null;
@@ -25,14 +42,11 @@ WHERE
     WHERE
       row_num > 1
   );
-  # l found 242 duplicate rows, with all the same values except the Person_ID column. But this is a sinthetic dataset
-  #dowloaded from Kaggle's datasets, it is for ilustrative purposes. So l will not delete duplicate rows because this dataset
-  #is not a reflection of real data but it serves for technical purposes
-
   select distinct(Occupation) from sleep_health;
   select distinct(Occupation), count(*) as counts from sleep_health group by Occupation order by counts desc;
-
-  #creating new columns based of the existing ones
+.............................................................................................................
+  -- creating new columns based of the existing ones
+  
   alter table sleep_health add Sleep_Duration_time varchar(10);
   set sql_safe_updates=0;
   update sleep_health set Sleep_Duration_time=
@@ -41,12 +55,17 @@ WHERE
   when Sleep_Duration between 6.0 and 6.9 then '6-7 hours'
   when Sleep_Duration between 7.0 and 7.9 then '7-8 hours'
   else '8+ hours' end;
-  select * from sleep_health;
-  #deleting column
+................................................................................................
+  -- deleting column
+  
   alter table sleep_health drop column Quality_of_Sleep;
- #renaming column value, after seeing there is a Normal and Normal Weight column value in BMI_Category
+  ...............................................................................................
+ -- renaming column value, after seeing there is a Normal and Normal Weight column value in BMI_Category
+  
  update sleep_health set BMI_Category='Normal' where BMI_Category='Normal Weight';
- #making Blood_Pressure column into u textual one
+....................................................................................................
+-- making Blood_Pressure column into u textual one
+  
  SELECT Blood_Pressure,
 SUBSTRING(Blood_Pressure, 1, locate('/', Blood_Pressure) -1 ) as Address1
 , SUBSTRING(Blood_Pressure, locate('/', Blood_Pressure) + 1 , length(Blood_Pressure)) as Address2
@@ -74,7 +93,8 @@ when systolic between 140 and 159 and diastolic between 90 and 99 then 'high hyp
 when systolic between 160 and 179 and diastolic between 100 and 109 then 'high hypertension 2'
 when systolic>=180 and diastolic>=110 then 'hypertension crisis'
 else 'unknown' end;
-#checking if some values fall out of range
+.....................................................................................................
+-- checking if some values fall out of range
 select Blood_Pressure, Blood_Pressure_text from sleep_health where Blood_Pressure_text='unknown';
 
 
