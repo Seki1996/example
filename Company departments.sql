@@ -9,15 +9,15 @@ select count(*) from sleep_health;
 
 select count(*) from information_schema.columns where table_name='sleep_health'; 
 ..................................................................
--- all data types are correct.
+-- All data types are correct.
   
 describe sleep_health;
 ..................................................................
--- change column names into proper understandable names with underscore connecetion, because l am working in mysql workbench
+-- Change column names into proper understandable names with underscore connecetion, because l am working in mysql workbench
   
 alter table sleep_health change column Physical Activity Level Daily phisical level(minutes) int;
 ..................................................................
--- checking if there are null values
+-- Checking if there are null values
 select Sleep_Duration from sleep_health;
 ..................................................................
 -- l found 242 duplicate rows, with all the same values except the Person_ID column. But this is a sinthetic dataset
@@ -45,7 +45,7 @@ WHERE
   select distinct(Occupation) from sleep_health;
   select distinct(Occupation), count(*) as counts from sleep_health group by Occupation order by counts desc;
 .............................................................................................................
-  -- creating new columns based of the existing ones
+  -- Creating new columns based of the existing ones
   
   alter table sleep_health add Sleep_Duration_time varchar(10);
   set sql_safe_updates=0;
@@ -56,15 +56,15 @@ WHERE
   when Sleep_Duration between 7.0 and 7.9 then '7-8 hours'
   else '8+ hours' end;
 ................................................................................................
-  -- deleting column
+  -- Deleting column
   
   alter table sleep_health drop column Quality_of_Sleep;
   ...............................................................................................
- -- renaming column value, after seeing there is a Normal and Normal Weight column value in BMI_Category
+ -- Renaming column value, after seeing there is a Normal and Normal Weight column value in BMI_Category
   
  update sleep_health set BMI_Category='Normal' where BMI_Category='Normal Weight';
 ....................................................................................................
--- making Blood_Pressure column into u textual one
+-- Making Blood_Pressure column into u textual one
   
  SELECT Blood_Pressure,
 SUBSTRING(Blood_Pressure, 1, locate('/', Blood_Pressure) -1 ) as Address1
@@ -94,7 +94,7 @@ when systolic between 160 and 179 and diastolic between 100 and 109 then 'high h
 when systolic>=180 and diastolic>=110 then 'hypertension crisis'
 else 'unknown' end;
 .....................................................................................................
--- checking if some values fall out of range
+-- Checking if some values fall out of range
 select Blood_Pressure, Blood_Pressure_text from sleep_health where Blood_Pressure_text='unknown';
 
 
