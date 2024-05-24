@@ -1,6 +1,6 @@
 -- To show all tables
   
-show tables;  
+show tables;
 ............................................................................................
 -- Showing a specific table
   
